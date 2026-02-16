@@ -1,0 +1,85 @@
+# Step-by-Step Commands — FTP Exposure Lab
+
+Run all commands ONLY inside an isolated lab
+and ONLY against systems you own or are authorized to test.
+
+Replace:
+<LAB_TARGET_IP> with the target IP
+<IFACE> with your network interface (eth0, wlan0, etc.)
+
+---
+
+## Step 1 — Create evidence directory
+```bash
+TS=$(date +%Y%m%d_%H%M%S)
+mkdir -p evidence/$TS
+
+
+Step 2 — Record lab context
+bash
+Copy code
+echo "Target: <LAB_TARGET_IP>" > evidence/$TS/context.txt
+echo "Attacker: $(uname -a)" >> evidence/$TS/context.txt
+
+
+Step 3 — Verify connectivity
+bash
+Copy code
+ping -c 2 <LAB_TARGET_IP>
+
+
+Step 4 — Full port and service discovery
+bash
+Copy code
+nmap -sV -p- <LAB_TARGET_IP> -oN evidence/$TS/nmap_full.txt
+
+
+Step 5 — FTP service discovery (port 21)
+bash
+Copy code
+nmap -sV -p 21 <LAB_TARGET_IP> -oN evidence/$TS/nmap_ftp_21.txt
+
+
+Step 6 — FTP enumeration (non-invasive scripts)
+bash
+Copy code
+nmap --script ftp-* -p 21 <LAB_TARGET_IP> -oN evidence/$TS/nmap_ftp_scripts.txt
+
+
+Step 7 — Vulnerability research reference (local database)
+bash
+Copy code
+searchsploit ftp > evidence/$TS/searchsploit_ftp.txt
+
+
+Step 8 — Optional packet capture for evidence
+bash
+Copy code
+sudo tcpdump -i <IFACE> host <LAB_TARGET_IP> -w evidence/$TS/ftp_lab_capture.pcap
+Stop capture with:
+bash
+Copy code
+Ctrl + C
+
+
+Step 9 — Create summary notes
+bash
+Copy code
+echo "FTP Exposure Lab Summary" > evidence/$TS/SUMMARY.md
+echo "Target: <LAB_TARGET_IP>" >> evidence/$TS/SUMMARY.md
+echo "Findings: Exposed FTP service increases attack surface." >> evidence/$TS/SUMMARY.md
+echo "Recommendation: Remove or replace FTP, restrict access, monitor scans." >> evidence/$TS/SUMMARY.md
+
+
+Step 10 — Review collected evidence
+bash
+Copy code
+ls -lah evidence/$TS
+
+
+End of Lab
+All outputs are stored inside:
+evidence/<timestamp>/
+
+
+cat evidence/$TS/nmap_ftp_21.txt
