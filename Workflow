@@ -75,6 +75,7 @@ Step 10 — Review collected evidence
 bash
 Copy code
 ls -lah evidence/$TS
+cat evidence/$TS/nmap_ftp_21.txt
 
 
 End of Lab
@@ -82,4 +83,4 @@ All outputs are stored inside:
 evidence/<timestamp>/
 
 
-cat evidence/$TS/nmap_ftp_21.txt
+
